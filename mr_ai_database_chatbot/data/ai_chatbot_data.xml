@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- A blank default configuration. The administrator only needs to open
+             it, choose a provider and paste an API key. -->
+        <record id="ai_chatbot_config_default" model="ai.chatbot.config">
+            <field name="name">Default AI Configuration</field>
+            <field name="provider">openai</field>
+            <field name="base_url">https://api.openai.com/v1</field>
+            <field name="model">gpt-4o-mini</field>
+            <field name="api_key"></field>
+        </record>
+    </data>
+</odoo>

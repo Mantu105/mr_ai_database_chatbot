@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_ai_chatbot_root"
+              name="AI Assistant"
+              web_icon="mr_ai_database_chatbot,static/description/icon.png"
+              sequence="95"/>
+
+    <menuitem id="menu_ai_chatbot_conversations"
+              name="Conversations"
+              parent="menu_ai_chatbot_root"
+              action="action_ai_chatbot_conversation"
+              sequence="10"/>
+
+    <menuitem id="menu_ai_chatbot_config_root"
+              name="Configuration"
+              parent="menu_ai_chatbot_root"
+              groups="group_ai_chatbot_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_ai_chatbot_config"
+              name="AI Configuration"
+              parent="menu_ai_chatbot_config_root"
+              action="action_ai_chatbot_config"
+              groups="group_ai_chatbot_manager"
+              sequence="10"/>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Security group for managing AI provider configuration -->
+    <record id="group_ai_chatbot_manager" model="res.groups">
+        <field name="name">AI Chatbot Administrator</field>
+        <field name="category_id" ref="base.module_category_productivity"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Each user only sees their own conversations -->
+    <record id="rule_ai_chatbot_conversation_own" model="ir.rule">
+        <field name="name">AI Conversation: own only</field>
+        <field name="model_id" ref="model_ai_chatbot_conversation"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Each user only sees messages from their own conversations -->
+    <record id="rule_ai_chatbot_message_own" model="ir.rule">
+        <field name="name">AI Message: own only</field>
+        <field name="model_id" ref="model_ai_chatbot_message"/>
+        <field name="domain_force">[('conversation_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>
