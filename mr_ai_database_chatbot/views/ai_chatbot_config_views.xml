@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ai_chatbot_config_list" model="ir.ui.view">
+        <field name="name">ai.chatbot.config.list</field>
+        <field name="model">ai.chatbot.config</field>
+        <field name="arch" type="xml">
+            <list string="AI Configurations">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="model"/>
+                <field name="is_default"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_chatbot_config_form" model="ir.ui.view">
+        <field name="name">ai.chatbot.config.form</field>
+        <field name="model">ai.chatbot.config</field>
+        <field name="arch" type="xml">
+            <form string="AI Configuration">
+                <header>
+                    <button name="action_test_connection" type="object"
+                            string="Test Connection" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Production OpenAI"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Provider">
+                            <field name="provider"/>
+                            <field name="model" required="1"/>
+                            <field name="api_key" password="True" required="1"/>
+                            <field name="base_url"/>
+                        </group>
+                        <group string="Behaviour">
+                            <field name="is_default"/>
+                            <field name="active"/>
+                            <field name="temperature"/>
+                            <field name="max_tokens"/>
+                        </group>
+                    </group>
+                    <group string="Access Control">
+                        <field name="restrict_models"/>
+                        <field name="allowed_model_ids" widget="many2many_tags"
+                               invisible="not restrict_models"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <notebook>
+                        <page string="System Prompt" name="system_prompt">
+                            <field name="system_prompt"
+                                   placeholder="Instructions that define how the assistant behaves..."/>
+                        </page>
+                        <page string="Help" name="help">
+                            <div class="text-muted">
+                                <p><strong>Bring Your Own Key (BYOK):</strong> paste an API key
+                                   from your chosen provider.</p>
+                                <ul>
+                                    <li><strong>OpenAI / DeepSeek / Perplexity:</strong> use the
+                                        Chat Completions compatible endpoint.</li>
+                                    <li><strong>Anthropic:</strong> uses the Messages API.</li>
+                                    <li><strong>Gemini:</strong> uses the generateContent API.</li>
+                                </ul>
+                                <p>The assistant reads data <em>as the current user</em>, so Odoo
+                                   access rights are always enforced. Enable
+                                   <em>Restrict Models</em> to additionally whitelist
+                                   which models it may read.</p>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_chatbot_config" model="ir.actions.act_window">
+        <field name="name">AI Configuration</field>
+        <field name="res_model">ai.chatbot.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first AI provider configuration
+            </p>
+            <p>
+                Choose a provider (OpenAI, Anthropic, Gemini, DeepSeek, Perplexity),
+                paste your API key, pick a model, and test the connection.
+            </p>
+        </field>
+    </record>
+
+</odoo>

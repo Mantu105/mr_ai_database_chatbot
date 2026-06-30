@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mr_ai_database_chatbot.AiChatbotWidget">
+        <div class="o_ai_chatbot">
+
+            <!-- Floating launcher -->
+            <button class="o_ai_chatbot_launcher" t-on-click="toggle" title="AI Assistant">
+                <span class="o_ai_chatbot_launcher_ring"/>
+                <i t-if="!state.open" class="fa fa-comments"/>
+                <i t-else="" class="fa fa-times"/>
+            </button>
+
+            <!-- Chat panel -->
+            <div t-if="state.open" class="o_ai_chatbot_panel">
+
+                <!-- Header -->
+                <div class="o_ai_chatbot_header">
+                    <div class="o_ai_chatbot_header_left">
+                        <div class="o_ai_chatbot_avatar">
+                            <span class="o_ai_chatbot_avatar_text">AI</span>
+                            <span class="o_ai_chatbot_online_dot"/>
+                        </div>
+                        <div class="o_ai_chatbot_header_info">
+                            <span class="o_ai_chatbot_title">AI Assistants Personal</span>
+                            <span class="o_ai_chatbot_status">
+                                <span class="o_ai_chatbot_status_dot"/>Online
+                            </span>
+                        </div>
+                    </div>
+                    <div class="o_ai_chatbot_header_actions">
+                        <button class="o_ai_chatbot_iconbtn" t-on-click="newChat" title="New conversation">
+                            <i class="fa fa-refresh"/>
+                        </button>
+                        <button class="o_ai_chatbot_iconbtn" t-on-click="toggle" title="Close">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="o_ai_chatbot_body" t-ref="scroll">
+
+                    <div t-if="!state.configured" class="o_ai_chatbot_notice">
+                        <div class="o_ai_chatbot_notice_icon"><i class="fa fa-exclamation-triangle"/></div>
+                        <p>The AI assistant is not configured yet.</p>
+                        <p class="o_ai_chatbot_notice_sub">Go to <strong>AI Assistant › Configuration</strong> to set up a provider.</p>
+                    </div>
+
+                    <div t-if="state.configured and !state.messages.length" class="o_ai_chatbot_empty">
+                        <div class="o_ai_chatbot_empty_icon"><i class="fa fa-magic"/></div>
+                        <h6>How can I help you today?</h6>
+                        <p>Ask me anything about your business data.</p>
+                    </div>
+
+                    <t t-foreach="state.messages" t-as="msg" t-key="msg_index">
+
+                        <!-- Time separator -->
+                        <div t-if="msg_index === 0 or getDateLabel(state.messages[msg_index - 1].timestamp) !== getDateLabel(msg.timestamp)"
+                             class="o_ai_chatbot_time_sep">
+                            <span><t t-esc="getDateLabel(msg.timestamp)"/></span>
+                        </div>
+
+                        <div t-att-class="'o_ai_chatbot_msg o_ai_chatbot_msg_' + msg.role">
+                            <div t-if="msg.role === 'assistant'" class="o_ai_chatbot_msg_avatar">
+                                <span>AI</span>
+                            </div>
+                            <div class="o_ai_chatbot_msg_content">
+                                <div class="o_ai_chatbot_bubble">
+                                    <t t-if="msg.role === 'assistant'" t-out="renderMarkdown(msg.content)"/>
+                                    <t t-else="" t-esc="msg.content"/>
+                                </div>
+                                <span class="o_ai_chatbot_msg_time">
+                                    <t t-esc="getTime(msg.timestamp)"/>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- Typing indicator -->
+                    <div t-if="state.loading" class="o_ai_chatbot_msg o_ai_chatbot_msg_assistant">
+                        <div class="o_ai_chatbot_msg_avatar"><span>AI</span></div>
+                        <div class="o_ai_chatbot_msg_content">
+                            <div class="o_ai_chatbot_bubble o_ai_chatbot_typing">
+                                <span/><span/><span/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="o_ai_chatbot_footer">
+                    <div class="o_ai_chatbot_input_wrap">
+                        <textarea class="o_ai_chatbot_input"
+                                  t-ref="input"
+                                  placeholder="AI message..."
+                                  rows="1"
+                                  t-att-disabled="!state.configured"
+                                  t-model="state.input"
+                                  t-on-keydown="onKeydown"/>
+                        <button class="o_ai_chatbot_send"
+                                t-on-click="send"
+                                t-att-disabled="state.loading or !state.configured">
+                            <i class="fa fa-arrow-right"/>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </t>
+
+</templates>
